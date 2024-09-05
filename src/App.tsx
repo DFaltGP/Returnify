@@ -1,4 +1,4 @@
-import { CalculatorContainer } from "./components/Calculator";
+import CalculatorContainer from "./components/Calculator";
 
 export default function App() {
   return (
