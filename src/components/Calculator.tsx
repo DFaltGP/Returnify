@@ -1,4 +1,13 @@
 import { ChangeEvent, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Input from "./Input";
 
 export default function CalculatorContainer() {
@@ -18,6 +27,7 @@ type FormData = {
   monthlyInvest: string;
   time: string;
   quantity: string;
+  timeCategory: string;
 };
 
 function CalculatorForm() {
@@ -27,9 +37,10 @@ function CalculatorForm() {
     monthlyInvest: "",
     time: "",
     quantity: "",
+    timeCategory: "year"
   });
 
-  const [validationErrors, setValidationErrors] = useState<FormData>({
+  const [validationErrors, setValidationErrors] = useState<Omit<FormData, "timeCategory">>({
     price: "",
     lastGain: "",
     monthlyInvest: "",
@@ -44,6 +55,13 @@ function CalculatorForm() {
       return { ...prevData, [name]: value };
     });
   };
+
+  // Function to update the time category
+  const handleTimeChange = (timeCategory: string) => {
+    setFormData((prevData) => {
+      return { ...prevData, timeCategory }
+    })
+  }
 
   // Function to validate the form values before try calculate
   const validateForm = (): boolean => {
@@ -143,6 +161,7 @@ function CalculatorForm() {
           }`}
           validationError={validationErrors.monthlyInvest}
         />
+        <div className="flex flex-row">
         <Input
           label="Prazo"
           name="time"
@@ -150,9 +169,24 @@ function CalculatorForm() {
           onChange={handleInputChange}
           className={`${
             validationErrors.time ? "outline-red-500" : "outline-violet-700"
-          }`}
+          } w-[260px] rounded-r-none`}
           validationError={validationErrors.time}
         />
+        <Select defaultValue="year" onValueChange={(value) => handleTimeChange(value)}>
+          <SelectTrigger className="w-[120px] rounded-l-none mt-8 bg-violet-700 text-white outline-none">
+            <SelectValue placeholder="Prazo" />
+          </SelectTrigger>
+          <SelectContent className="bg-violet-700 text-white">
+            <SelectGroup>
+              <SelectLabel>Categoria</SelectLabel>
+              <SelectItem value="day">Dias</SelectItem>
+              <SelectItem value="month">Meses</SelectItem>
+              <SelectItem value="year">Anos</SelectItem>
+              <SelectItem value="decade">Décadas</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        </div>
         <Input
           label="Qtde de cotas inicial"
           name="quantity"
@@ -166,7 +200,7 @@ function CalculatorForm() {
       </div>
       <button
         onClick={handleSubmit}
-        className="w-28 mt-10 px-2 py-1.5 rounded-md bg-violet-700 font-medium text-lg text-white"
+        className="w-28 mt-10 px-2 py-1.5 rounded-md bg-violet-700 text-white"
       >
         Calcular
       </button>
