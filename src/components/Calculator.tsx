@@ -31,6 +31,7 @@ type FormData = {
 };
 
 function CalculatorForm() {
+
   const [formData, setFormData] = useState<FormData>({
     price: "",
     lastGain: "",
@@ -116,6 +117,7 @@ function CalculatorForm() {
 
   const handleSubmit = () => {
     if (validateForm()) {
+      console.log(process.env.API_KEY)
       console.log(
         `Formulário enviado com as seguintes informações: ${JSON.stringify(
           formData,
